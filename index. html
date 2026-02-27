@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ritwik AI - Premium 3D Experience</title>
+    <style>
+        /* --- RESET & BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #09090b 0%, #0f172a 50%, #020617 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* --- ANIMATED GRADIENT TEXT --- */
+        .gradient-text {
+            background: linear-gradient(90deg, #60a5fa, #a855f7, #ec4899, #60a5fa);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient-shift 8s ease infinite;
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- STICKY TOP BANNER --- */
+        .top-banner {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: linear-gradient(90deg, #a855f7, #6366f1);
+            color: white; text-align: center; padding: 10px;
+            font-size: 0.9rem; font-weight: bold; z-index: 1001;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .top-banner a { color: white; text-decoration: underline; margin-left: 10px; }
+
+        /* --- NAVBAR --- */
+        nav {
+            position: fixed; top: 38px; width: 100%;
+            padding: 1.2rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; color: #fff; text-decoration: none; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; font-size: 0.95rem; transition: color 0.3s; }
+        .nav-links a:hover { color: #a855f7; }
+        .btn-login {
+            background: rgba(168, 85, 247, 0.2); color: #a855f7;
+            padding: 8px 20px; border-radius: 20px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            cursor: pointer; font-weight: 600; transition: all 0.3s;
+        }
+        .btn-login:hover { background: #a855f7; color: white; }
+
+        /* --- REVEAL ANIMATION --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- HERO SECTION --- */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; padding: 100px 20px 0; }
+        .orb-container { width: 300px; height: 300px; margin-bottom: 3rem; animation: float 6s ease-in-out infinite; transform-style: preserve-3d; position: relative; }
+        .orb { width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #e0e7ff, #a855f7, #3b0764); box-shadow: 0 0 60px rgba(168, 85, 247, 0.6), 0 0 100px rgba(168, 85, 247, 0.4); position: relative; }
+        .orb::after { content: ''; position: absolute; top: 50%; left: 50%; width: 380px; height: 380px; border: 2px solid rgba(168, 85, 247, 0.3); border-radius: 50%; transform: translate(-50%, -50%) rotateX(75deg); animation: spin 10s linear infinite; }
+        .hero h1 { font-size: 4rem; margin-bottom: 1rem; line-height: 1.1; }
+        .hero p { font-size: 1.2rem; color: #94a3b8; margin-bottom: 2.5rem; }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #a855f7, #6366f1); color: white;
+            padding: 14px 35px; border-radius: 50px; border: none;
+            font-weight: bold; font-size: 1rem; cursor: pointer;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(168, 85, 247, 0.3);
+            transition: all 0.3s; text-decoration: none; display: inline-block;
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(168, 85, 247, 0.8), 0 0 60px rgba(168, 85, 247, 0.5); }
+
+        /* --- SECTIONS GENERAL --- */
+        .section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 4rem; }
+
+        /* --- TOOLS SECTION --- */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .tool-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .tool-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .tool-card h3 { margin-bottom: 0.5rem; font-size: 1.3rem; }
+        .tool-card p { color: #94a3b8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem; }
+        
+        .try-btn {
+            display: inline-block;
+            color: #a855f7;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+        .tool-card:hover .try-btn { border-color: #a855f7; }
+
+        /* --- OTHER SECTIONS --- */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: center; }
+        .price-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 3rem 2rem; text-align: center; transition: all 0.4s ease; backdrop-filter: blur(10px); }
+        .price-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: rgba(168, 85, 247, 0.3); }
+        .price-card.pro { background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.4); transform: scale(1.05); z-index: 2; }
+        .price-card.pro:hover { transform: scale(1.05) translateY(-10px); }
+        .price-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; opacity: 0.8; }
+        .price-card .price { font-size: 3.5rem; font-weight: bold; margin: 1rem 0; }
+        .price-card ul { list-style: none; margin: 2rem 0; text-align: left; }
+        .price-card ul li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; }
+        .btn-outline { background: transparent; color: white; padding: 12px 30px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; font-weight: bold; transition: all 0.3s; width: 100%; }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+        .trust-badges { display: flex; justify-content: center; gap: 40px; margin-top: 60px; flex-wrap: wrap; opacity: 0.7; }
+        .badge { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        .badge-icon { font-size: 1.5rem; color: #4ade80; }
+
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .testimonial-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 15px; transition: transform 0.3s; }
+        .testimonial-card:hover { transform: translateY(-5px); }
+        .stars { color: #fbbf24; margin-bottom: 15px; }
+        .user-info { display: flex; align-items: center; gap: 15px; margin-top: 20px; }
+        .avatar { width: 50px; height: 50px; background: #334155; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #a855f7; }
+
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .faq-question { width: 100%; background: none; border: none; color: white; padding: 20px 0; text-align: left; font-size: 1.1rem; cursor: pointer; display: flex; justify-content: space-between; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; color: #94a3b8; line-height: 1.6; }
+        .faq-item.active .faq-answer { max-height: 200px; }
+        .faq-item.active .faq-icon { transform: rotate(45deg); }
+
+        .payment-box, .contact-form { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 3rem; max-width: 500px; margin: 0 auto; text-align: center; }
+        .contact-form { text-align: left; display: flex; flex-direction: column; gap: 1.5rem; max-width: 600px; }
+        .input-group input, .input-group textarea { width: 100%; padding: 15px 20px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; font-family: inherit; font-size: 1rem; outline: none; }
+        .input-group input:focus, .input-group textarea:focus { border-color: #a855f7; }
+
+        /* --- MODALS --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .modal { background: #1e1b4b; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; position: relative; transform: scale(0.9); transition: transform 0.4s ease; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .modal-overlay.active .modal { transform: scale(1); }
+        
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; color: #94a3b8; cursor: pointer; background: none; border: none; transition: color 0.2s; }
+        .close-btn:hover { color: white; }
+        
+        .modal h2 { margin-bottom: 1rem; }
+        .modal p { color: #cbd5e1; margin-bottom: 1.5rem; }
+
+        footer { position: relative; text-align: center; padding: 4rem 2rem; opacity: 0.5; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes spin { from { transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg); } to { transform: translate(-50%, -50%) rotateX(75deg) rotateZ(360deg); } }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links a { display: none; }
+            .btn-login { display: block; }
+            .top-banner { font-size: 0.8rem; padding: 8px; }
+            nav { top: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STICKY TOP BANNER -->
+    <div class="top-banner">
+        🚀 Limited Time Offer: Get 20% OFF on Pro Plan! <a href="#pricing">Upgrade Now</a>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="#" class="logo">RITWIK AI</a>
+        <div class="nav-links">
+            <a href="#tools">Tools</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#testimonials">Reviews</a>
+            <a href="#contact">Contact</a>
+            <button class="btn-login" id="loginBtn">Login</button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="orb-container">
+            <div class="orb"></div>
+        </div>
+        <h1>Create Without Limits<br><span class="gradient-text">Intelligence Unlocked</span></h1>
+        <p>The most advanced AI platform for creators. Premium tools, zero complexity.</p>
+        <a href="#tools" class="btn-primary">Explore Ecosystem</a>
+    </section>
+
+    <!-- OUR TOOLS SECTION -->
+    <section id="tools" class="section reveal">
+        <h2 class="section-title">Our <span class="gradient-text">Ecosystem</span></h2>
+        <div class="tools-grid">
+            
+            <div class="tool-card">
+                <div class="tool-icon">✍️</div>
+                <h3>AI Writer</h3>
+                <p>Generate blogs, ad copy, emails, and stories with a single click.</p>
+                <a href="#" class="try-btn">Try Demo &rarr;</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">🎨</div>
+                <h3>AI Image Generator</h3>
+                <p>Create stunning 4K visuals, art, and designs from text prompts.</p>
+                <a href="#" class="try-btn">Try Demo &rarr;</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">🎙️</div>
+                <h3>AI Voice Studio</h3>
+                <p>Realistic text-to-speech, voice cloning, and music generation.</p>
+                <a href="#" class="try-btn">Try Demo &rarr;</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">💻</div>
+                <h3>AI Code Builder</h3>
+                <p>Write, debug, and explain code in 50+ programming languages.</p>
+                <a href="#" class="try-btn">Try Demo &rarr;</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">🌐</div>
+                <h3>AI Website Generator</h3>
+                <p>Build and deploy full-stack websites with a single prompt.</p>
+                <a href="#" class="try-btn">Try Demo &rarr;</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">💼</div>
+                <h3>AI Business Suite</h3>
+                <p>Automate emails, reports, and workflows for your enterprise.</p>
+                <a href="#" class="try-btn">Try Demo &rarr;</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section reveal">
+        <h2 class="section-title">Simple <span class="gradient-text">Pricing</span></h2>
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Free</h3>
+                <div class="price">$0</div>
+                <p style="opacity: 0.7">Forever</p>
+                <ul>
+                    <li>5 Generations / day</li>
+                    <li>Standard Quality</li>
+                    <li>Community Support</li>
+                </ul>
+                <button class="btn-outline">Current Plan</button>
+            </div>
+
+            <div class="price-card pro">
+                <h3 style="color: #a855f7;">Pro</h3>
+                <div class="price">$49<span>/mo</span></div>
+                <p style="opacity: 0.7">Most Popular</p>
+                <ul>
+                    <li>Unlimited Generations</li>
+                    <li>4K Quality Output</li>
+                    <li>Priority Support</li>
+                </ul>
+                <button class="btn-primary" id="proPlanBtn" style="width: 100%;">Upgrade Now</button>
+            </div>
+
+            <div class="price-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <p style="opacity: 0.7">For Teams</p>
+                <ul>
+                    <li>Dedicated Server</li>
+                    <li>Custom Models</li>
+                    <li>24/7 Support</li>
+                </ul>
+                <button class="btn-outline" id="enterpriseBtn">Contact Sales</button>
+            </div>
+        </div>
+
+        <!-- TRUST BADGES -->
+        <div class="trust-badges">
+            <div class="badge"><span class="badge-icon">🔒</span><span>SSL Protected</span></div>
+            <div class="badge"><span class="badge-icon">💳</span><span>Secure Payment</span></div>
+            <div class="badge"><span class="badge-icon">✅</span><span>Money-Back Guarantee</span></div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="section reveal">
+        <h2 class="section-title">Loved by <span class="gradient-text">Creators</span></h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p>"Ritwik AI has completely transformed my workflow. The speed is unmatched."</p>
+                <div class="user-info">
+                    <div class="avatar">JD</div>
+                    <div><div class="user-name">John Doe</div><div class="user-role">Designer</div></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p>"The Pro plan is worth every penny. The 4K output quality is stunning."</p>
+                <div class="user-info">
+                    <div class="avatar">SK</div>
+                    <div><div class="user-name">Sarah Khan</div><div class="user-role">Creator</div></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p>"We integrated the API for our enterprise needs. Scalable and reliable."</p>
+                <div class="user-info">
+                    <div class="avatar">MR</div>
+                    <div><div class="user-name">Mike Ross</div><div class="user-role">CTO</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section reveal">
+        <h2 class="section-title">Frequently Asked <span class="gradient-text">Questions</span></h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-question">How does the free plan work? <span class="faq-icon">+</span></button>
+                <div class="faq-answer"><p>The free plan allows you to generate up to 5 assets per day with standard quality.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Can I cancel my subscription anytime? <span class="faq-icon">+</span></button>
+                <div class="faq-answer"><p>Yes, you can cancel your Pro subscription at any time.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">What payment methods do you accept? <span class="faq-icon">+</span></button>
+                <div class="faq-answer"><p>We accept UPI and major credit cards. Razorpay integration is coming soon.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAYMENT SECTION -->
+    <section id="payment" class="section reveal">
+        <h2 class="section-title">Payment <span class="gradient-text">Options</span></h2>
+        <div class="payment-box">
+            <h3>Scan to Pay</h3>
+            <div style="width: 200px; height: 200px; background: white; margin: 20px auto; border-radius: 10px; color: black; display: flex; align-items: center; justify-content: center;">
+                QR CODE<br>(UPI)
+            </div>
+            <button class="btn-primary" id="upiBtn">Pay with UPI</button>
+            <p style="margin-top: 20px; font-size: 0.9rem; color: #94a3b8;">🚧 Coming Soon: Seamless Razorpay Integration</p>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section reveal">
+        <h2 class="section-title">Get in <span class="gradient-text">Touch</span></h2>
+        <form class="contact-form" id="contactForm">
+            <div class="input-group"><input type="text" placeholder="Your Name" required></div>
+            <div class="input-group"><input type="email" placeholder="Your Email" required></div>
+            <div class="input-group"><textarea placeholder="Your Message" required></textarea></div>
+            <button type="submit" class="btn-primary" style="border: none;">Send Message</button>
+        </form>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>© 2026 Ritwik AI. All rights reserved.</footer>
+
+    <!-- AUTH MODAL -->
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal">
+            <button class="close-btn">&times;</button>
+            <div id="login-view">
+                <h2>Welcome Back</h2>
+                <input type="email" placeholder="Email Address" style="width:100%; padding:15px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:1rem; outline:none;">
+                <input type="password" placeholder="Password" style="width:100%; padding:15px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:1rem; outline:none;">
+                <button class="btn-primary" style="width:100%;">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN SCRIPT -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // --- 1. Handle "Try Demo" Button Clicks ---
+            var allLinks = document.getElementsByTagName("a");
+            for (var i = 0; i < allLinks.length; i++) {
+                var link = allLinks[i];
+                if (link.textContent.includes("Try Demo")) {
+                    link.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        alert("Demo preview coming soon in Ritwik AI.");
+                    });
+                }
+            }
+
+            // --- 2. Handle Pricing Buttons ---
+            var proPlanBtn = document.getElementById("proPlanBtn");
+            if (proPlanBtn) {
+                proPlanBtn.addEventListener("click", function() {
+                    window.location.href = "#payment";
+                });
+            }
+
+            var enterpriseBtn = document.getElementById("enterpriseBtn");
+            if (enterpriseBtn) {
+                enterpriseBtn.addEventListener("click", function() {
+                    window.location.href = "#contact";
+                });
+            }
+
+            // --- 3. Handle UPI Payment Button ---
+            var upiBtn = document.getElementById("upiBtn");
+            if (upiBtn) {
+                upiBtn.addEventListener("click", function() {
+                    alert("Demo Mode: UPI Payment Initiated!");
+                });
+            }
+
+            // --- 4. Handle Contact Form ---
+            var contactForm = document.getElementById("contactForm");
+            if (contactForm) {
+                contactForm.addEventListener("submit", function(event) {
+                    event.preventDefault();
+                    alert("Message Sent!");
+                });
+            }
+
+            // --- 5. Handle Login Modal ---
+            var loginBtn = document.getElementById("loginBtn");
+            var authModal = document.getElementById("auth-modal");
+            var closeBtns = document.querySelectorAll(".close-btn");
+
+            if (loginBtn && authModal) {
+                loginBtn.addEventListener("click", function() {
+                    authModal.classList.add("active");
+                });
+            }
+
+            for (var j = 0; j < closeBtns.length; j++) {
+                closeBtns[j].addEventListener("click", function() {
+                    var overlay = this.closest(".modal-overlay");
+                    if (overlay) overlay.classList.remove("active");
+                });
+            }
+
+            // Close modal on overlay click
+            window.addEventListener("click", function(event) {
+                if (event.target.classList.contains("modal-overlay")) {
+                    event.target.classList.remove("active");
+                }
+            });
+
+            // --- 6. FAQ Accordion ---
+            var faqItems = document.querySelectorAll(".faq-item");
+            for (var k = 0; k < faqItems.length; k++) {
+                faqItems[k].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                });
+            }
+
+            // --- 7. Scroll Reveal ---
+            function reveal() {
+                var reveals = document.querySelectorAll(".reveal");
+                for (var m = 0; m < reveals.length; m++) {
+                    var windowHeight = window.innerHeight;
+                    var elementTop = reveals[m].getBoundingClientRect().top;
+                    var elementVisible = 150;
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveals[m].classList.add("active");
+                    }
+                }
+            }
+            window.addEventListener("scroll", reveal);
+            reveal();
+
+        });
+    </script>
+</body>
+</html>
